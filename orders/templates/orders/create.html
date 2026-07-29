@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+
+{% block title %}فروشگاه کلارا{% endblock %}
+
+{% block content %}
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>body { font-family: 'Vazir', sans-serif; }</style>
+</head>
+<body class="bg-gray-50">
+    <div class="max-w-6xl mx-auto px-4 py-12">
+        <h1 class="text-2xl mb-10 font-light">تسویه حساب</h1>
+        
+        <form method="post" class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+            {% csrf_token %}
+            <!-- بخش اطلاعات ارسال -->
+            <div class="bg-white p-8 shadow-sm">
+                <h3 class="text-lg mb-6 border-b pb-2">اطلاعات ارسال</h3>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm mb-2">نام</label>
+                        <input type="text" name="first_name" class="w-full border p-2 text-sm focus:outline-none" required>
+                    </div>
+                    <div>
+                        <label class="block text-sm mb-2">نام خانوادگی</label>
+                        <input type="text" name="last_name" class="w-full border p-2 text-sm focus:outline-none" required>
+                    </div>
+                </div>
+                <div class="mt-4">
+                    <label class="block text-sm mb-2">شماره موبایل</label>
+                    <input type="text" name="phone" class="w-full border p-2 text-sm focus:outline-none" required>
+                </div>
+                <div class="mt-4">
+                    <label class="block text-sm mb-2">شهر</label>
+                    <input type="text" name="city" class="w-full border p-2 text-sm focus:outline-none" required>
+                </div>
+                <div class="mt-4">
+                    <label class="block text-sm mb-2">آدرس دقیق</label>
+                    <textarea name="address" class="w-full border p-2 text-sm focus:outline-none h-24" required></textarea>
+                </div>
+                <div class="mt-4">
+                    <label class="block text-sm mb-2">کد پستی</label>
+                    <input type="text" name="postal_code" class="w-full border p-2 text-sm focus:outline-none" required>
+                </div>
+            </div>
+
+            <!-- خلاصه سفارش -->
+            <div class="bg-white p-8 shadow-sm h-fit">
+                <h3 class="text-lg mb-6 border-b pb-2">سفارش شما</h3>
+                {% for item in cart %}
+                <div class="flex justify-between items-center mb-4 text-sm">
+                    <div class="flex items-center gap-3">
+                        <img src="{{ item.product.image.url }}" class="w-12 h-16 object-cover">
+                        <span>{{ item.product.name }} ({{ item.quantity }} عدد)</span>
+                    </div>
+                    <span>{{ item.total_price }} تومان</span>
+                </div>
+                {% endfor %}
+                <div class="border-t mt-6 pt-4 flex justify-between font-bold">
+                    <span>مبلغ قابل پرداخت:</span>
+                    <span>{{ cart.get_total_price }} تومان</span>
+                </div>
+                <button type="submit" class="w-full bg-[#a38a5e] text-white py-4 mt-8 hover:bg-black transition">
+                    ثبت سفارش و پرداخت
+                </button>
+            </div>
+        </form>
+    </div>
+</body>
+</html>
+{% endblock %}

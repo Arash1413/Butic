@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+
+{% block title %}فروشگاه کلارا{% endblock %}
+
+{% block content %}
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <title>سفارش ثبت شد | کلارا</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>body { font-family: 'Vazir', sans-serif; }</style>
+</head>
+<body class="bg-gray-50 flex items-center justify-center min-h-screen">
+    <div class="bg-white p-10 shadow-sm border text-center max-w-md">
+        <!-- آیکون تایید -->
+        <div class="w-20 h-20 bg-green-50 text-green-500 rounded-full flex items-center justify-center mx-auto mb-6">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+            </svg>
+        </div>
+
+        <h1 class="text-2xl font-light mb-4">با تشکر از خرید شما!</h1>
+        <p class="text-gray-600 mb-6">سفارش شما با موفقیت در سیستم کلارا ثبت شد.</p>
+        
+        <div class="bg-gray-50 p-4 mb-8">
+            <p class="text-sm text-gray-500">شماره پیگیری سفارش شما:</p>
+            <p class="text-lg font-bold">#{{ order.id }}</p>
+        </div>
+
+        <div class="flex flex-col gap-3">
+            <a href="/" class="bg-black text-white py-3 hover:bg-gray-800 transition">
+                بازگشت به فروشگاه
+            </a>
+            <a href="{% url 'accounts:dashboard' %}" class="text-sm text-gray-500 hover:text-black">
+                مشاهده در پنل کاربری
+            </a>
+        </div>
+    </div>
+</body>
+</html>
+
+{% endblock %}

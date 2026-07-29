@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+
+{% block title %}فروشگاه کلارا{% endblock %}
+
+{% block content %}
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <title>سبد خرید | کلارا</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @font-face { font-family: 'Vazir'; src: url('https://cdn.jsdelivr.net/gh/rastikerdar/vazir-font@v30.1.0/dist/font-face.css'); }
+        body { font-family: 'Vazir', sans-serif; }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <header class="py-10 text-center bg-white border-b">
+        <h1 class="text-2xl font-light tracking-widest">سبد خرید</h1>
+    </header>
+
+    <main class="max-w-6xl mx-auto px-4 py-12">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-10">
+            <!-- لیست محصولات -->
+            <div class="lg:col-span-2 bg-white p-6 shadow-sm">
+                <table class="w-full text-right">
+                    <thead>
+                        <tr class="border-b text-gray-400 text-sm">
+                            <th class="pb-4 font-light">محصول</th>
+                            <th class="pb-4 font-light text-center">تعداد</th>
+                            <th class="pb-4 font-light text-center">قیمت</th>
+                            <th class="pb-4"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in cart %}
+                        <tr class="border-b">
+                            <td class="py-6 flex items-center gap-4">
+                                <img src="{{ item.product.image.url }}" class="w-20 h-24 object-cover">
+                                <div>
+                                    <p class="text-sm font-medium">{{ item.product.name }}</p>
+                                    <p class="text-xs text-gray-400 mt-1">سایز: انتخاب شده</p>
+                                </div>
+                            </td>
+                            <td class="text-center">{{ item.quantity }}</td>
+                            <td class="text-center text-sm">{{ item.total_price }} تومان</td>
+                            <td class="text-left">
+                                <a href="{% url 'cart:cart_remove' item.product.id %}" class="text-red-400 hover:text-red-600">✕</a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- خلاصه صورت‌حساب -->
+            <div class="bg-white p-6 shadow-sm h-fit">
+                <h3 class="text-lg mb-6 border-b pb-4">مجموع سبد خرید</h3>
+                <div class="flex justify-between mb-4 text-sm">
+                    <span>جمع کل:</span>
+                    <span>{{ cart.get_total_price }} تومان</span>
+                </div>
+                <div class="flex justify-between mb-6 text-sm text-green-600">
+                    <span>هزینه ارسال:</span>
+                    <span>رایگان</span>
+                </div>
+                <div class="border-t pt-4 flex justify-between font-bold">
+                    <span>مبلغ قابل پرداخت:</span>
+                    <span>{{ cart.get_total_price }} تومان</span>
+                </div>
+                <a href="{% url 'orders:order_create' %}" class="block text-center w-full bg-black text-white py-4 mt-8 hover:bg-gray-800 transition">
+    ادامه جهت پرداخت
+</a>
+            </div>
+        </div>
+    </main>
+</body>
+</html>
+{% endblock %}

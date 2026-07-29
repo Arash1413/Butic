@@ -1,0 +1,105 @@
+{% extends 'base.html' %}
+
+{% block title %}فروشگاه کلارا{% endblock %}
+
+{% block content %}
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ product.name }} | کلارا</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @font-face { font-family: 'Vazir'; src: url('https://cdn.jsdelivr.net/gh/rastikerdar/vazir-font@v30.1.0/dist/font-face.css'); }
+        body { font-family: 'Vazir', sans-serif; background-color: #fff; color: #333; }
+    </style>
+</head>
+<body>
+    <!-- هدر ساده -->
+    <header class="border-b py-6 text-center">
+        <a href="/" class="text-3xl tracking-widest font-light">CLARA</a>
+    </header>
+
+    <main class="max-w-6xl mx-auto px-4 py-12">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
+            
+            <!-- بخش تصاویر (سمت راست در موبایل، سمت راست در دسکتاپ RTL) -->
+            <div class="space-y-4">
+                <div class="bg-gray-50 aspect-[3/4] overflow-hidden">
+                    <img src="{{ product.image.url }}" class="w-full h-full object-cover" id="mainImage">
+                </div>
+                <!-- گالری تصاویر کوچک -->
+                <div class="grid grid-cols-4 gap-2">
+                    {% for img in product.images.all %}
+                    <img src="{{ img.image.url }}" class="cursor-pointer hover:opacity-75 border aspect-square object-cover" onclick="document.getElementById('mainImage').src=this.src">
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- بخش اطلاعات محصول -->
+            <div class="flex flex-col space-y-6">
+                <nav class="text-xs text-gray-400">
+                    صفحه اصلی / فروشگاه / {{ product.category.name }}
+                </nav>
+                
+                <h1 class="text-2xl font-light">{{ product.name }}</h1>
+                <p class="text-xl font-semibold text-gray-800">{{ product.price }} تومان</p>
+                
+                <div class="border-t border-b py-4">
+                    <p class="text-sm leading-7 text-gray-600">{{ product.description }}</p>
+                </div>
+
+                <!-- انتخاب سایز -->
+                <div>
+                    <span class="text-sm font-bold block mb-3">انتخاب سایز:</span>
+                    <div class="flex gap-3">
+                        {% if product.size_xs %}<button class="w-10 h-10 border hover:bg-black hover:text-white transition">XS</button>{% endif %}
+                        {% if product.size_s %}<button class="w-10 h-10 border hover:bg-black hover:text-white transition">S</button>{% endif %}
+                        {% if product.size_m %}<button class="w-10 h-10 border hover:bg-black hover:text-white transition">M</button>{% endif %}
+                        {% if product.size_l %}<button class="w-10 h-10 border hover:bg-black hover:text-white transition">L</button>{% endif %}
+                        {% if product.size_xl %}<button class="w-10 h-10 border hover:bg-black hover:text-white transition">XL</button>{% endif %}
+                    </div>
+                </div>
+
+                <!-- دکمه افزودن به سبد -->
+                <!-- فرم افزودن به سبد خرید واقعی -->
+<form action="{% url 'cart:cart_add' product.id %}" method="post">
+    {% csrf_token %}
+    <button type="submit" class="w-full bg-[#a38a5e] text-white py-4 hover:bg-[#8e774f] transition duration-300">
+        افزودن به سبد خرید
+    </button>
+</form>
+
+                <!-- آکاردئون جزئیات (نمونه) -->
+                <div class="mt-8 border-t text-sm">
+                    <details class="py-3 border-b cursor-pointer">
+                        <summary class="list-none flex justify-between">جزئیات محصول <span class="text-xl">+</span></summary>
+                        <p class="pt-2 text-gray-500">جنس پارچه: کرپ درجه یک. مناسب برای فصل بهار و تابستان.</p>
+                    </details>
+                    <details class="py-3 border-b cursor-pointer">
+                        <summary class="list-none flex justify-between">راهنمای سایز <span class="text-xl">+</span></summary>
+                        <p class="pt-2 text-gray-500">لطفاً قبل از خرید جدول سایزبندی را در بخش وبلاگ مطالعه کنید.</p>
+                    </details>
+                </div>
+            </div>
+        </div>
+
+        <!-- بخش محصولات مشابه -->
+        <div class="mt-20">
+            <h3 class="text-center text-xl mb-10 font-light tracking-widest uppercase">محصولات مشابه</h3>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+                {% for p in similar_products %}
+                <a href="{% url 'products:product_detail' p.slug %}" class="group">
+                    <div class="aspect-[3/4] bg-gray-100 overflow-hidden mb-3">
+                        <img src="{{ p.image.url }}" class="w-full h-full object-cover group-hover:scale-105 transition">
+                    </div>
+                    <p class="text-sm text-center">{{ p.name }}</p>
+                    <p class="text-sm font-bold text-center mt-1">{{ p.price }} تومان</p>
+                </a>
+                {% endfor %}
+            </div>
+        </div>
+    </main>
+</body>
+</html>
+{% endblock %}

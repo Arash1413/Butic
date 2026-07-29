@@ -1,0 +1,115 @@
+{% extends 'base.html' %}
+
+{% block title %}CLARA | کلارا - بوتیک تخصصی بانوان{% endblock %}
+
+{% block content %}
+
+    <!-- Hero Section (بنر اصلی) -->
+    <section class="relative h-[80vh] bg-gray-100 overflow-hidden">
+        <div class="absolute inset-0">
+            <!-- تصویر اصلی بنر -->
+            <img src="https://images.unsplash.com/photo-1490481651871-ab68de25d43d?q=80&w=2070" class="w-full h-full object-cover">
+        </div>
+        <div class="absolute inset-0 bg-black/10 flex flex-col justify-center items-end px-20">
+            <div class="text-right text-white space-y-4">
+                <h3 class="text-sm tracking-widest uppercase">استایل و</h3>
+                <h2 class="text-6xl font-light">شیک پوشی</h2>
+                <p class="text-lg opacity-80">کالکشن بهار - تابستان ۲۰۲۴</p>
+                <a href="{% url 'products:product_list' %}" class="inline-block border border-white px-10 py-3 mt-6 hover:bg-white hover:text-black transition duration-500">
+                    مشاهده کالکشن
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Featured Categories (دسته‌بندی‌های ویژه) -->
+    <section class="max-w-7xl mx-auto px-4 py-20">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+            {% for cat in categories %}
+            <a href="{% url 'products:product_list_by_category' cat.slug %}" class="relative aspect-[3/4] group cursor-pointer overflow-hidden bg-gray-200">
+                {% if cat.image %}
+                    <img src="{{ cat.image.url }}" class="absolute inset-0 w-full h-full object-cover transition duration-700 group-hover:scale-110">
+                {% endif %}
+                <div class="absolute inset-0 flex items-center justify-center text-white z-10 font-bold text-lg tracking-widest bg-black/20 group-hover:bg-black/40 transition">
+                    {{ cat.name }}
+                </div>
+            </a>
+            {% endfor %}
+        </div>
+    </section>
+
+    <!-- Latest Products (جدیدترین‌ها) -->
+    <section id="newest" class="bg-white py-20">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="flex justify-between items-end mb-10">
+                <a href="{% url 'products:product_list' %}" class="text-xs border-b border-black">مشاهده همه</a>
+                <h2 class="text-2xl font-light">جدیدترین‌ها</h2>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
+                {% for product in latest_products %}
+                <div class="group relative">
+                    <!-- دکمه علاقه‌مندی -->
+                    <a href="{% url 'products:toggle_favorite' product.id %}" class="absolute top-4 left-4 z-20 bg-white/80 p-2 rounded-full hover:bg-white transition shadow-md group/heart">
+                        <svg class="w-5 h-5 {% if request.user.is_authenticated and product in request.user.favorites.all %}fill-red-500 text-red-500{% else %}text-gray-400 group-hover/heart:text-red-400{% endif %}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                        </svg>
+                    </a>
+
+                    <a href="{% url 'products:product_detail' product.slug %}">
+                        <div class="aspect-[3/4] overflow-hidden bg-gray-50 mb-4">
+                            <img src="{{ product.image.url }}" class="w-full h-full object-cover group-hover:scale-105 transition duration-700">
+                        </div>
+                        <div class="text-center">
+                            <h3 class="text-sm font-light text-gray-700">{{ product.name }}</h3>
+                            <p class="text-sm font-bold mt-1">{{ product.price }} تومان</p>
+                        </div>
+                    </a>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+
+    <!-- Best Sellers (پرفروش‌ترین‌ها) -->
+    <section id="best-sellers" class="bg-gray-50 py-20">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="flex justify-between items-end mb-10">
+                <a href="{% url 'products:product_list' %}" class="text-xs border-b border-black">مشاهده همه</a>
+                <h2 class="text-2xl font-light">پرفروش‌ترین محصولات</h2>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
+                {% for product in best_sellers %}
+                <div class="group relative">
+                    <!-- دکمه علاقه‌مندی -->
+                    <button type="button" onclick="toggleFavorite({{ product.id }}, this)" class="absolute top-4 left-4 z-20 bg-white/80 p-2 rounded-full shadow-md focus:outline-none">
+    <svg class="w-5 h-5 transition-all duration-300 
+         {% if request.user.is_authenticated and product in request.user.favorites.all %}
+            fill-red-500 text-red-500
+         {% else %}
+            text-gray-400
+         {% endif %}" 
+         fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+    </svg>
+</button>
+
+                    <a href="{% url 'products:product_detail' product.slug %}">
+                        <div class="aspect-[3/4] overflow-hidden bg-white mb-4 shadow-sm">
+                            <img src="{{ product.image.url }}" class="w-full h-full object-cover group-hover:scale-105 transition duration-700">
+                        </div>
+                        <div class="text-center">
+                            <h3 class="text-sm font-light text-gray-700">{{ product.name }}</h3>
+                            <p class="text-sm font-bold mt-1 text-[#a38a5e]">{{ product.price }} تومان</p>
+                            {% if product.total_sold %}
+                                <p class="text-[10px] text-gray-400 mt-2 uppercase tracking-widest italic">محبوب‌ترین انتخاب</p>
+                            {% endif %}
+                        </div>
+                    </a>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+
+{% endblock %}

@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+
+{% block title %}فروشگاه کلارا | لیست محصولات{% endblock %}
+
+{% block content %}
+<main class="max-w-7xl mx-auto px-4 py-10">
+    <div class="flex flex-col md:flex-row gap-8">
+        
+        <!-- Sidebar (Categories) - سایدبار دسته‌بندی‌ها -->
+        <aside class="w-full md:w-1/4">
+            <h3 class="font-bold mb-6 pb-2 border-b text-gray-800">دسته‌بندی‌ها</h3>
+            <ul class="space-y-3 text-sm text-gray-600">
+                <li>
+                    <a href="{% url 'products:product_list' %}" 
+                       class="hover:text-black transition {% if not category %}font-bold text-black border-r-2 border-black pr-2{% endif %}">
+                        همه محصولات
+                    </a>
+                </li>
+                
+                {% for cat in categories %}
+                <li>
+                    <a href="{% url 'products:product_list_by_category' cat.slug %}" 
+                       class="hover:text-black transition {% if category.slug == cat.slug %}font-bold text-black border-r-2 border-black pr-2{% endif %}">
+                        {{ cat.name }}
+                    </a>
+                </li>
+                {% endfor %}
+            </ul>
+        </aside>
+
+        <!-- Product Grid - شبکه محصولات -->
+        <div class="w-full md:w-3/4 grid grid-cols-1 md:grid-cols-3 gap-10">
+            {% for product in products %}
+            <div class="group relative">
+                
+               
+                <button type="button" onclick="toggleFavorite({{ product.id }}, this)" class="absolute top-4 left-4 z-20 bg-white/80 p-2 rounded-full shadow-md focus:outline-none">
+    <svg class="w-5 h-5 transition-all duration-300 
+         {% if request.user.is_authenticated and product in request.user.favorites.all %}
+            fill-red-500 text-red-500
+         {% else %}
+            text-gray-400
+         {% endif %}" 
+         fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+    </svg>
+</button>
+
+                <!-- لینک به جزئیات محصول -->
+                <a href="{% url 'products:product_detail' product.slug %}" class="block">
+                    <div class="relative overflow-hidden bg-gray-100 aspect-[3/4]">
+                        <!-- تصویر محصول با افکت زوم -->
+                        <img src="{{ product.image.url }}" 
+                             alt="{{ product.name }}" 
+                             class="object-cover w-full h-full transition duration-700 group-hover:scale-110">
+                        
+                        <!-- نمایش برچسب ناموجود -->
+                        {% if not product.is_available %}
+                        <div class="absolute inset-0 bg-black/30 flex items-center justify-center">
+                            <span class="text-white bg-black/60 px-4 py-2 text-[10px] uppercase tracking-widest">ناموجود</span>
+                        </div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="mt-4 text-center">
+                        <h2 class="text-sm text-gray-700 font-light group-hover:text-black transition">{{ product.name }}</h2>
+                        <p class="mt-2 text-sm font-semibold text-gray-900">{{ product.price }} تومان</p>
+                    </div>
+                </a>
+            </div>
+            {% empty %}
+            <div class="col-span-3 text-center py-20 text-gray-400 italic">
+                محصولی در این دسته‌بندی یافت نشد.
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</main>
+{% endblock %}

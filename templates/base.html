@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}CLARA | بوتیک آنلاین{% endblock %}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @font-face { font-family: 'Vazir'; src: url('https://cdn.jsdelivr.net/gh/rastikerdar/vazir-font@v30.1.0/dist/font-face.css'); }
+        body { font-family: 'Vazir', sans-serif; }
+        .serif-logo { font-family: 'Times New Roman', serif; }
+    </style>
+</head>
+<body class="bg-white text-gray-900">
+
+    <!-- Header (مطابق تصویر درخواستی شما) -->
+    <header class="bg-white pt-8 pb-4 sticky top-0 z-50 shadow-sm border-b border-gray-50">
+        <!-- Logo -->
+        <div class="flex justify-center mb-6">
+            <a href="{% url 'pages:home' %}" class="flex items-center gap-2">
+                <h1 class="text-4xl tracking-[0.4em] font-light text-[#b29a74] uppercase serif-logo">Clara</h1>
+            </a>
+        </div>
+
+        <!-- Navigation & Icons -->
+        <div class="max-w-7xl mx-auto px-6 flex items-center justify-between">
+            <div class="w-24"></div> <!-- Spacer -->
+            
+            <nav class="flex gap-10 text-[13px] font-medium tracking-wide">
+                <a href="{% url 'pages:home' %}#newest" class="hover:text-[#b29a74] transition">جدیدترین‌ها</a>
+                <a href="{% url 'pages:home' %}#best-sellers" class="hover:text-[#b29a74] transition">پرفروش‌ها</a>
+                <a href="{% url 'products:product_list' %}" class="hover:text-[#b29a74] transition">فروشگاه</a>
+                <a href="{% url 'pages:home' %}" class="hover:text-[#b29a74] transition border-b border-black">صفحه اصلی</a>
+            </nav>
+
+            <div class="flex items-center gap-5 text-[#b29a74]">
+                <button class="hover:scale-110 transition">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+                </button>
+                <a href="{% url 'accounts:dashboard' %}" class="hover:scale-110 transition">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+                </a>
+                <a href="{% url 'cart:cart_detail' %}" class="hover:scale-110 transition relative">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    {% block content %}{% endblock %}
+
+    <!-- Footer -->
+<footer class="mt-20">
+    <!-- بخش اول: مزایا (آیکون‌های طلایی) -->
+    <div class="border-t border-b py-10 bg-white">
+        <div class="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-8">
+            <!-- مزیت ۱ -->
+            <div class="flex items-center justify-center gap-4 text-right">
+                <div>
+                    <h4 class="text-sm font-bold text-gray-800">پرداخت امن</h4>
+                    <p class="text-xs text-gray-500 mt-1">پرداخت آنلاین با کارت بانکی</p>
+                </div>
+                <div class="text-[#b29a74]">
+                    <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path></svg>
+                </div>
+            </div>
+            <!-- مزیت ۲ -->
+            <div class="flex items-center justify-center gap-4 text-right">
+                <div>
+                    <h4 class="text-sm font-bold text-gray-800">بازگشت آسان</h4>
+                    <p class="text-xs text-gray-500 mt-1">تا ۳۰ روز فرصت بازگشت</p>
+                </div>
+                <div class="text-[#b29a74]">
+                    <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+                </div>
+            </div>
+            <!-- مزیت ۳ -->
+            <div class="flex items-center justify-center gap-4 text-right">
+                <div>
+                    <h4 class="text-sm font-bold text-gray-800">ارسال سریع</h4>
+                    <p class="text-xs text-gray-500 mt-1">برای سفارشات بالای ۱,۰۰۰,۰۰۰ تومان</p>
+                </div>
+                <div class="text-[#b29a74]">
+                    <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- بخش دوم: لینک‌ها و شبکه‌های اجتماعی -->
+    <div class="bg-[#f9f6f2] py-16">
+        <div class="max-w-7xl mx-auto px-6 grid grid-cols-2 md:grid-cols-4 gap-12 text-right">
+            
+            <!-- ستون ۱: خدمات مشتریان -->
+            <div>
+                <h4 class="text-sm font-bold mb-6 text-gray-800 underline decoration-[#b29a74] underline-offset-8">خدمات مشتریان</h4>
+                <ul class="space-y-3 text-xs text-gray-600">
+                    <li><a href="#" class="hover:text-black">پرسش‌های متداول</a></li>
+                    <li><a href="#" class="hover:text-black">راهنمای خرید</a></li>
+                    <li><a href="#" class="hover:text-black">شرایط بازگشت کالا</a></li>
+                    <li><a href="#" class="hover:text-black">پیگیری سفارش</a></li>
+                </ul>
+            </div>
+
+            <!-- ستون ۲: راهنمای خرید -->
+            <div>
+                <h4 class="text-sm font-bold mb-6 text-gray-800 underline decoration-[#b29a74] underline-offset-8">راهنمای خرید</h4>
+                <ul class="space-y-3 text-xs text-gray-600">
+                    <li><a href="{% url 'products:product_list' %}" class="hover:text-black">همه محصولات</a></li>
+                    <li><a href="#" class="hover:text-black">مانتو</a></li>
+                    <li><a href="#" class="hover:text-black">لباس</a></li>
+                    <li><a href="#" class="hover:text-black">شومیز</a></li>
+                </ul>
+            </div>
+
+            <!-- ستون ۳: درباره ما -->
+            <div>
+                <h4 class="text-sm font-bold mb-6 text-gray-800 underline decoration-[#b29a74] underline-offset-8">درباره ما</h4>
+                <ul class="space-y-3 text-xs text-gray-600">
+                    <li><a href="#" class="hover:text-black">درباره کلارا</a></li>
+                    <li><a href="#" class="hover:text-black">تماس با ما</a></li>
+                    <li><a href="#" class="hover:text-black">همکاری با ما</a></li>
+                    <li><a href="#" class="hover:text-black">بلاگ</a></li>
+                </ul>
+            </div>
+
+            <!-- ستون ۴: دنبال کنید -->
+            <div class="text-center md:text-right">
+                <h4 class="text-sm font-bold mb-6 text-gray-800">ما را دنبال کنید</h4>
+                <div class="flex justify-center md:justify-start gap-4">
+                    <a href="#" class="w-8 h-8 rounded-full border border-[#b29a74] flex items-center justify-center text-[#b29a74] hover:bg-[#b29a74] hover:text-white transition">
+                        <i class="fab fa-instagram"></i>
+                    </a>
+                    <a href="#" class="w-8 h-8 rounded-full border border-[#b29a74] flex items-center justify-center text-[#b29a74] hover:bg-[#b29a74] hover:text-white transition">
+                        <i class="fab fa-telegram-plane"></i>
+                    </a>
+                    <a href="#" class="w-8 h-8 rounded-full border border-[#b29a74] flex items-center justify-center text-[#b29a74] hover:bg-[#b29a74] hover:text-white transition">
+                        <i class="fab fa-twitter"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <!-- کپی‌رایت نهایی -->
+        <div class="max-w-7xl mx-auto px-6 mt-16 pt-8 border-t border-gray-200 text-center">
+            <p class="text-[10px] text-gray-400 tracking-widest uppercase">© ۲۰۲۴ تمامی حقوق برای بوتیک کلارا محفوظ است.</p>
+        </div>
+    </div>
+</footer>
+
+<!-- اضافه کردن FontAwesome برای آیکون‌های سوشال -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+<script>
+function toggleFavorite(productId, btnElement) {
+    // پیدا کردن آیکون SVG داخل دکمه
+    const svg = btnElement.querySelector('svg');
+
+    fetch(`/products/favorite/toggle/${productId}/`, {
+        method: 'GET', // یا POST اگر در ویو تنظیم کردید
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest',
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.status === 'added') {
+            // قرمز کردن قلب
+            svg.classList.add('fill-red-500', 'text-red-500');
+            svg.classList.remove('text-gray-400');
+        } else if (data.status === 'removed') {
+            // خاکستری کردن قلب
+            svg.classList.remove('fill-red-500', 'text-red-500');
+            svg.classList.add('text-gray-400');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('لطفاً ابتدا وارد حساب کاربری خود شوید.');
+    });
+}
+</script>
+</body>
+</html>
