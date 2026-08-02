@@ -7,7 +7,6 @@
     <!-- Hero Section (بنر اصلی) -->
     <section class="relative h-[80vh] bg-gray-100 overflow-hidden">
         <div class="absolute inset-0">
-            <!-- تصویر اصلی بنر -->
             <img src="https://images.unsplash.com/photo-1490481651871-ab68de25d43d?q=80&w=2070" class="w-full h-full object-cover">
         </div>
         <div class="absolute inset-0 bg-black/10 flex flex-col justify-center items-end px-20">
@@ -48,12 +47,18 @@
             <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
                 {% for product in latest_products %}
                 <div class="group relative">
-                    <!-- دکمه علاقه‌مندی -->
-                    <a href="{% url 'products:toggle_favorite' product.id %}" class="absolute top-4 left-4 z-20 bg-white/80 p-2 rounded-full hover:bg-white transition shadow-md group/heart">
-                        <svg class="w-5 h-5 {% if request.user.is_authenticated and product in request.user.favorites.all %}fill-red-500 text-red-500{% else %}text-gray-400 group-hover/heart:text-red-400{% endif %}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <!-- اصلاح شده: دکمه علاقه‌مندی به صورت Button برای جلوگیری از هدایت به صفحه مشکی -->
+                    <button type="button" onclick="toggleFavorite({{ product.id }}, this)" class="absolute top-4 left-4 z-20 bg-white/80 p-2 rounded-full shadow-md focus:outline-none">
+                        <svg class="w-5 h-5 transition-all duration-300 
+                             {% if request.user.is_authenticated and product in request.user.favorites.all %}
+                                fill-red-500 text-red-500
+                             {% else %}
+                                text-gray-400
+                             {% endif %}" 
+                             fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
                         </svg>
-                    </a>
+                    </button>
 
                     <a href="{% url 'products:product_detail' product.slug %}">
                         <div class="aspect-[3/4] overflow-hidden bg-gray-50 mb-4">
@@ -81,18 +86,18 @@
             <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
                 {% for product in best_sellers %}
                 <div class="group relative">
-                    <!-- دکمه علاقه‌مندی -->
+                    <!-- دکمه علاقه‌مندی به صورت Button -->
                     <button type="button" onclick="toggleFavorite({{ product.id }}, this)" class="absolute top-4 left-4 z-20 bg-white/80 p-2 rounded-full shadow-md focus:outline-none">
-    <svg class="w-5 h-5 transition-all duration-300 
-         {% if request.user.is_authenticated and product in request.user.favorites.all %}
-            fill-red-500 text-red-500
-         {% else %}
-            text-gray-400
-         {% endif %}" 
-         fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-    </svg>
-</button>
+                        <svg class="w-5 h-5 transition-all duration-300 
+                             {% if request.user.is_authenticated and product in request.user.favorites.all %}
+                                fill-red-500 text-red-500
+                             {% else %}
+                                text-gray-400
+                             {% endif %}" 
+                             fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                        </svg>
+                    </button>
 
                     <a href="{% url 'products:product_detail' product.slug %}">
                         <div class="aspect-[3/4] overflow-hidden bg-white mb-4 shadow-sm">
