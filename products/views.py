@@ -3,6 +3,7 @@ from .models import Product, Category
 from django.contrib.auth.decorators import login_required
 from .models import Favorite
 from django.http import JsonResponse # برای پاسخ بدون رفرش
+from django.db.models import Q
 
 def product_list(request, category_slug=None): # اضافه کردن پارامتر اسلاگ
     category = None
@@ -49,3 +50,17 @@ def toggle_favorite(request, product_id):
 def wishlist(request):
     favorites = Favorite.objects.filter(user=request.user)
     return render(request, 'products/wishlist.html', {'favorites': favorites})
+
+
+def product_search(request):
+    query = request.GET.get('q') # دریافت کلمه جستجو شده از آدرس
+    results = []
+    if query:
+        results = Product.objects.filter(
+            Q(name__icontains=query) | Q(description__icontains=query),
+            is_available=True
+        )
+    return render(request, 'products/search_results.html', {
+        'products': results,
+        'query': query
+    })
