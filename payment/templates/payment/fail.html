@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block title %}خطا در پرداخت | کلارا{% endblock %}
+
+{% block content %}
+<div class="flex items-center justify-center min-h-[70vh] bg-[#fdfdfd] px-4">
+    <div class="max-w-md w-full bg-white p-12 border border-gray-100 shadow-sm text-center">
+        <!-- آیکون خطا -->
+        <div class="w-20 h-20 bg-red-50 text-red-400 rounded-full flex items-center justify-center mx-auto mb-8">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+        </div>
+
+        <h1 class="text-2xl font-light tracking-widest uppercase mb-4 text-gray-800">تراکنش ناموفق</h1>
+        <p class="text-[11px] text-gray-400 mb-10 leading-6">متأسفانه فرآیند پرداخت با خطا مواجه شد. مبلغی از حساب شما کسر نشده است.</p>
+        
+        <div class="flex flex-col gap-4">
+            <a href="{% url 'cart:cart_detail' %}" class="w-full bg-black text-white py-4 hover:bg-gray-800 transition duration-500 text-[10px] tracking-[0.2em] uppercase">
+                تلاش مجدد و سبد خرید
+            </a>
+            <p class="text-[10px] text-gray-400">در صورت بروز مشکل با پشتیبانی تماس بگیرید.</p>
+        </div>
+    </div>
+</div>
+{% endblock %}

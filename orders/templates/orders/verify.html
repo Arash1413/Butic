@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="flex items-center justify-center min-h-[60vh] bg-[#fcfcfc]">
+    <div class="max-w-md w-full bg-white p-12 border shadow-sm text-center">
+        <h2 class="text-xl font-light tracking-widest uppercase mb-6">تایید سفارش</h2>
+        <p class="text-[11px] text-gray-400 mb-10 leading-6">کد تایید فروشگاه مختاریان به موبایل شما ارسال شد. لطفاً آن را در کادر زیر وارد کنید.</p>
+        
+        {% if error %}
+            <p class="text-red-500 text-xs mb-6">{{ error }}</p>
+        {% endif %}
+
+        <form method="post" class="space-y-8">
+            {% csrf_token %}
+            <input type="text" name="otp" placeholder="ـ ـ ـ ـ ـ ـ" 
+                   class="w-full border-b border-gray-200 py-4 text-center tracking-[1.5em] focus:outline-none focus:border-[#b29a74] text-2xl font-light">
+            
+            <button type="submit" class="w-full bg-black text-white py-4 hover:bg-[#b29a74] transition duration-500 text-[11px] tracking-widest uppercase">
+                تایید و اتصال به درگاه بانکی
+            </button>
+        </form>
+    </div>
+</div>
+{% endblock %}

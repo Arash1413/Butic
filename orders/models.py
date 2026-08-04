@@ -12,6 +12,7 @@ class Order(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     paid = models.BooleanField(default=False, verbose_name="وضعیت پرداخت")
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='orders', null=True, blank=True)
+    tracking_code = models.CharField(max_length=100, blank=True, null=True) # کد تراکنش بانکی
 
     class Meta:
         ordering = ('-created',)

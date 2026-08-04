@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+
+{% block title %}پرداخت موفق | کلارا{% endblock %}
+
+{% block content %}
+<div class="flex items-center justify-center min-h-[70vh] bg-[#fdfdfd] px-4">
+    <div class="max-w-md w-full bg-white p-12 border border-gray-100 shadow-sm text-center">
+        <!-- آیکون تایید طلایی -->
+        <div class="w-20 h-20 bg-[#f9f6f2] text-[#b29a74] rounded-full flex items-center justify-center mx-auto mb-8">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M5 13l4 4L19 7" />
+            </svg>
+        </div>
+
+        <h1 class="text-2xl font-light tracking-widest uppercase mb-4 text-gray-800">پرداخت موفقیت‌آمیز</h1>
+        <p class="text-[11px] text-gray-400 mb-8 leading-6">با تشکر از انتخاب شما. سفارش شما با موفقیت ثبت شد و در حال آماده‌سازی برای ارسال است.</p>
+        
+        <!-- جزئیات سفارش -->
+        <div class="bg-[#f9f6f2] p-6 mb-10 space-y-3">
+            <div class="flex justify-between text-[11px]">
+                <span class="text-gray-400">شماره سفارش:</span>
+                <span class="font-bold text-gray-800">#{{ order.id }}</span>
+            </div>
+            <div class="flex justify-between text-[11px]">
+                <span class="text-gray-400">مبلغ پرداخت شده:</span>
+                <span class="font-bold text-gray-800">{{ order.get_total_cost }} تومان</span>
+            </div>
+        </div>
+
+        <div class="flex flex-col gap-4">
+            <a href="{% url 'accounts:dashboard' %}" class="w-full bg-black text-white py-4 hover:bg-gray-800 transition duration-500 text-[10px] tracking-[0.2em] uppercase">
+                مشاهده سفارش در پنل کاربری
+            </a>
+            <a href="{% url 'pages:home' %}" class="text-[10px] text-gray-400 hover:text-black transition border-b border-transparent hover:border-black pb-1 inline-block mx-auto">
+                بازگشت به صفحه اصلی
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}
