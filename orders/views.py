@@ -67,7 +67,7 @@ def verify_otp(request):
             
             # هدایت به درگاه پرداخت (مرحله بعدی)
             request.session['order_id'] = order.id # ذخیره ID برای مرحله پرداخت
-            return redirect('payment:process') 
+            return redirect('payment:process', order_id=order.id)
         else:
             return render(request, 'orders/verify.html', {'error': 'کد وارد شده صحیح نیست.'})
 

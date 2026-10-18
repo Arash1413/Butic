@@ -1,73 +1,91 @@
 
 import requests
 import json
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import render, redirect, get_object_or_404, reverse
+from config import settings
 from orders.models import Order
 from django.http import HttpResponse
 
 # این کد (PIN) را از پنل آقای پرداخت بخش درگاه‌ها دریافت کنید
-PIN = "07CB55632240088D0504" 
 
-def payment_process(request):
-    # گرفتن سفارش از سشن (که در مرحله قبل ساختیم)
-    order_id = request.session.get('order_id')
+
+def payment_process(request, order_id):
     order = get_object_or_404(Order, id=order_id)
     
-    amount = order.get_total_cost() # مبلغ به تومان
-    callback_url = "http://127.0.0.1:8000/payment/callback/" # آدرس برگشت
-
-    # مرحله اول: درخواست تراکنش
+    # مبلغ باید عدد صحیح و به تومان باشد (بین ۱,۰۰۰ تا ۴۰۰,۰۰۰,۰۰۰)
+    amount = int(order.get_total_cost()) 
+    
+    # ساخت آدرس بازگشتی به صورت خودکار
+    callback_url = request.build_absolute_uri(reverse('payment:callback'))
+    
+    # مرحله اول: ایجاد تراکنش (Create)
     url = "https://panel.aqayepardakht.ir/api/v2/create"
-    data = {
-        "pin": PIN,
-        "amount": amount,
-        "callback": callback_url,
-        "invoice_id": str(order.id),
-        "description": f"پرداخت سفارش شماره {order.id}"
+    payload = {
+        'pin': settings.AQAYEPARDAKHT_PIN, # برای تست بنویسید 'sandbox'  
+        'amount': amount,
+        'callback': callback_url,
+        'mobile': order.phone,
+        'description': f'پرداخت سفارش شماره {order.id}',
     }
-
+    
     try:
-        response = requests.post(url, data=data)
+        response = requests.post(url, data=payload)
         result = response.json()
         
-        if result['status'] == "success":
-            # ذخیره کد تراکنش برای مرحله تایید
-            order.tracking_code = result['transid'] 
-            order.save()
-            # هدایت کاربر به درگاه بانک
-            return redirect(f"https://panel.aqayepardakht.ir/startpay/{result['transid']}")
+        if result['status'] == 'success':
+            trans_id = result['transid']
+            request.session['order_id'] = order.id
+            
+            # مرحله دوم: انتقال به درگاه
+            # اگر پین 'sandbox' است، آدرس متفاوت است
+            if settings.AQAYEPARDAKHT_PIN == 'sandbox':
+                return redirect(f'https://panel.aqayepardakht.ir/startpay/sandbox/{trans_id}')
+            else:
+                return redirect(f'https://panel.aqayepardakht.ir/startpay/{trans_id}')
         else:
-            return HttpResponse(f"خطا در ایجاد تراکنش: {result['code']}")
+            # نمایش کد خطا (مثلا -15)
+            return render(request, 'payment/error.html', {'error': result['code']})
     except Exception as e:
-        return HttpResponse(f"خطا در اتصال به درگاه: {e}")
+        return render(request, 'payment/error.html', {'error': 'خطا در ارتباط با سرور درگاه'})
 
 def payment_callback(request):
-    # اطلاعاتی که آقای پرداخت برای ما برمی‌گرداند
-    status = request.POST.get('status')
-    transid = request.POST.get('transid')
+    # مرحله سوم: بازگشت از درگاه (آقای پرداخت داده‌ها را POST می‌کند)
+    # برای اطمینان هم POST و هم GET را چک می‌کنیم
+    data = request.POST if request.method == 'POST' else request.GET
     
-    if status == "1": # یعنی پرداخت اولیه موفق بوده
-        order = get_object_or_404(Order, tracking_code=transid)
+    status = data.get('status')
+    trans_id = data.get('transid')
+    order_id = request.session.get('order_id')
+    
+    if not order_id:
+        return render(request, 'payment/fail.html', {'error': 'سفارش یافت نشد'})
         
-        # مرحله دوم: تایید نهایی تراکنش (Verify)
-        url = "https://panel.aqayepardakht.ir/api/v2/verify"
-        data = {
-            "pin": PIN,
-            "amount": order.get_total_cost(),
-            "transid": transid
+    order = get_object_or_404(Order, id=order_id)
+    
+    # اگر وضعیت ۱ بود یعنی پرداخت در بانک موفق بوده، حالا باید تایید (Verify) کنیم
+    if status == '1':
+        # مرحله چهارم: وریفای تراکنش
+        verify_url = "https://panel.aqayepardakht.ir/api/v2/verify"
+        verify_payload = {
+            'pin': settings.AQAYEPARDAKHT_PIN, 
+            'amount': int(order.get_total_cost()),
+            'transid': trans_id
         }
         
-        response = requests.post(url, data=data)
-        result = response.json()
-        
-        if result['status'] == "success":
-            # پرداخت ۱۰۰٪ تایید شد!
-            order.paid = True
-            order.save()
-            return render(request, 'payment/success.html', {'order': order})
-        else:
-            return render(request, 'payment/failed.html', {'error': result['code']})
-    
-    return render(request, 'payment/failed.html', {'error': 'تراکنش توسط کاربر لغو شد.'})
-
-# Create your views here.
+        try:
+            verify_res = requests.post(verify_url, data=verify_payload).json()
+            
+            if verify_res['status'] == 'success':
+                # پرداخت ۱۰۰٪ تایید شد
+                order.paid = True
+                order.save()
+                # پاک کردن سبد خرید و اطلاعات موقت
+                if 'order_id' in request.session:
+                    del request.session['order_id']
+                return render(request, 'payment/success.html', {'order': order})
+            else:
+                return render(request, 'payment/fail.html', {'error': 'تاییدیه درگاه دریافت نشد'})
+        except:
+            return render(request, 'payment/fail.html', {'error': 'خطا در عملیات وریفای'})
+            
+    return render(request, 'payment/fail.html', {'error': 'پرداخت توسط کاربر لغو شد'})

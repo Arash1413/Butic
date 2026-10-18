@@ -1,6 +1,7 @@
 import requests
 import json
 import random
+from decouple import config
 
 def send_otp(mobile, code):
     url = "https://api.sms.ir/v1/send/verify"
@@ -17,7 +18,7 @@ def send_otp(mobile, code):
     headers = {
         'Content-Type': 'application/json',
         'Accept': 'text/plain',
-        'x-api-key': 'Rwa9Fc0qqhUyGvG1sl6f9h5IcCUOr38B4CJnH64g7SPRi0nd' # کلید اختصاصی شما
+        'x-api-key': config('x-api-key')
     }
     try:
         response = requests.post(url, data=payload, headers=headers)

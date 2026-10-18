@@ -1,6 +1,6 @@
 from django.urls import path
 from .views import product_list, product_detail
-from django.urls import path, re_path # re_path را اضافه کنید
+from django.urls import path, re_path 
 from . import views
 
 app_name = 'products'
